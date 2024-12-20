@@ -16,7 +16,9 @@ import us.kikin.android.ptp.ui.theme.PtpTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContent {
             PtpTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
