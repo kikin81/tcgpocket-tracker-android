@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dependency.sorter)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -38,6 +40,10 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 }
 
@@ -45,12 +51,19 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.bundles.room)
+    implementation(libs.hilt)
+    implementation(libs.hilt.compose.navigation)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.lifecycle.viewmodel)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.timber)
 
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
@@ -61,4 +74,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    ksp(libs.hilt.compiler)
+    ksp(libs.room.compiler)
+
+    lintChecks(libs.compose.lint.checks)
 }
