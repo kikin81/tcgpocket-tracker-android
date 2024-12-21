@@ -24,7 +24,16 @@ fun CardEntity.toDomain() = Card(
     id = id,
     name = name,
     hp = hp,
-    image = image
+    image = image,
+    cardType = cardType,
+    evolutionType = evolutionType,
+    weakness = weakness,
+    retreat = retreat,
+    rarity = rarity,
+    pack = pack,
+    artist = artist,
+    craftingCost = craftingCost,
+    setDetails = setDetails
 )
 
 fun List<Card>.toLocal() = map(Card::toLocal)

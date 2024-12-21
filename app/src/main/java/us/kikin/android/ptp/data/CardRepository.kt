@@ -7,4 +7,6 @@ interface CardRepository {
     fun getCardsStream(): Flow<List<Card>>
 
     fun getCards(): List<Card>
+
+    fun getCardByIdStream(cardId: String): Flow<Card>
 }

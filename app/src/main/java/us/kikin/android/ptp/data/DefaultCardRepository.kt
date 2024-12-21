@@ -26,4 +26,8 @@ class DefaultCardRepository @Inject constructor(
     override fun getCards(): List<Card> {
         return localDataSource.getAll().toDomain()
     }
+
+    override fun getCardByIdStream(cardId: String): Flow<Card> {
+        return localDataSource.observeById(cardId).map { it.toDomain() }
+    }
 }

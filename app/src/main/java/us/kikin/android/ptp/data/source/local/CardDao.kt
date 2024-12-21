@@ -11,4 +11,7 @@ interface CardDao {
 
     @Query("SELECT * FROM Cards")
     fun observeAll(): Flow<List<CardEntity>>
+
+    @Query("SELECT * FROM Cards WHERE id = :cardId")
+    fun observeById(cardId: String): Flow<CardEntity>
 }

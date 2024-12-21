@@ -42,10 +42,11 @@ import androidx.compose.material3.Card as MaterialCard
 
 @Composable
 fun CardsScreen(
+    onCardClick: (Card) -> Unit,
     modifier: Modifier = Modifier,
     @StringRes userMessage: Int? = null,
     viewModel: CardsViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -55,6 +56,7 @@ fun CardsScreen(
 
         CardsContent(
             cards = uiState.cards.toPersistentList(),
+            onCardClick = onCardClick,
             isLoading = uiState.isLoading,
             userMessage = userMessage,
             modifier = Modifier.padding(paddingValues)
@@ -75,6 +77,7 @@ fun CardsScreen(
 private fun CardsContent(
     cards: ImmutableList<Card>,
     isLoading: Boolean,
+    onCardClick: (Card) -> Unit,
     userMessage: Int?,
     modifier: Modifier = Modifier
 ) {
@@ -86,7 +89,7 @@ private fun CardsContent(
         } else {
             CardsList(
                 cards = cards,
-                onCardClick = { /* Handle card click */ }
+                onCardClick = onCardClick,
             )
         }
     }
@@ -185,6 +188,7 @@ private fun CardsContentPreview() {
             ),
         ),
         isLoading = false,
-        userMessage = null
+        userMessage = null,
+        onCardClick = {},
     )
 }

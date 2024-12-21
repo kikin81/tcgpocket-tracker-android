@@ -8,4 +8,13 @@ data class Card(
     val name: String,
     val hp: String? = null,
     val image: String? = null,
+    val cardType: String? = null,
+    val evolutionType: String? = null,
+    val weakness: String? = null,
+    val retreat: Int? = null,
+    val rarity: String? = null,
+    val pack: String? = null,
+    val artist: String? = null,
+    val craftingCost: Int? = null,
+    val setDetails: String? = null,
 )
