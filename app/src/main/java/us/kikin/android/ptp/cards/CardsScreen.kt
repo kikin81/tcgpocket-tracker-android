@@ -1,11 +1,15 @@
 package us.kikin.android.ptp.cards
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -21,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -71,31 +76,57 @@ private fun CardsContent(
         if (isLoading) {
             CircularProgressIndicator()
         } else {
-            CardsList(cards = cards)
+            CardsList(
+                cards = cards,
+                onCardClick = { /* Handle card click */ }
+            )
         }
     }
 }
 
 @Composable
 private fun CardsList(
-    cards: ImmutableList<Card>
+    cards: ImmutableList<Card>,
+    onCardClick: (Card) -> Unit,
 ) {
     // Display the list of cards
-    LazyColumn {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(128.dp),
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         items(cards) { card ->
-            CardItem(card = card)
+            CardItem(
+                card = card,
+                onCardClick = onCardClick,
+            )
         }
     }
 }
 
 @Composable
-private fun CardItem(card: Card) {
+private fun CardItem(
+    card: Card,
+    onCardClick: (Card) -> Unit,
+    modifier: Modifier = Modifier
+) {
     // Display the card item
-    MaterialCard {
+    MaterialCard(
+        modifier = modifier
+            .fillMaxWidth(),
+        onClick = { onCardClick(card) },
+    ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(8.dp)
         ) {
             // Display the card information
+            card.image?.let { imageUrl ->
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = card.name,
+                )
+            }
             Text(text = card.name)
             Text(text = "HP: ${card.hp}")
         }
