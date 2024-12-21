@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,21 +12,28 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePreviewHandler
+import coil3.compose.LocalAsyncImagePreviewHandler
+import coil3.test.FakeImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -91,7 +99,7 @@ private fun CardsList(
 ) {
     // Display the list of cards
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(128.dp),
+        columns = GridCells.Adaptive(120.dp),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -105,30 +113,37 @@ private fun CardsList(
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun CardItem(
     card: Card,
     onCardClick: (Card) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Display the card item
     MaterialCard(
         modifier = modifier
             .fillMaxWidth(),
         onClick = { onCardClick(card) },
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            // Display the card information
+        Column {
             card.image?.let { imageUrl ->
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = card.name,
+                val previewHandler = AsyncImagePreviewHandler {
+                    FakeImage(color = Color.Black.hashCode())
+                }
+                CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = card.name,
+                        modifier = Modifier.aspectRatio(3f / 4f)
+                    )
+                }
+            }
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    text = card.name,
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
-            Text(text = card.name)
-            Text(text = "HP: ${card.hp}")
         }
     }
 }
@@ -142,7 +157,31 @@ private fun CardsContentPreview() {
                 id = "A1001",
                 name = "Bulbasaur",
                 image = "https://example.com/image1.jpg",
-                hp = "70",
+            ),
+            Card(
+                id = "A1002",
+                name = "Ivysaur",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1003",
+                name = "Venosaur",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1004",
+                name = "Charmander",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1005",
+                name = "Charmeleon",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1006",
+                name = "Charizard",
+                image = "https://example.com/image1.jpg",
             ),
         ),
         isLoading = false,

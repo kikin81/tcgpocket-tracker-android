@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.room)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -62,11 +63,13 @@ dependencies {
     implementation(libs.bundles.room)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.test)
     implementation(libs.hilt)
     implementation(libs.hilt.compose.navigation)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.serialization.json)
     implementation(libs.timber)
 
     debugImplementation(libs.androidx.ui.test.manifest)

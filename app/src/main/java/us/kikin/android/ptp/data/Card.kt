@@ -6,6 +6,6 @@ package us.kikin.android.ptp.data
 data class Card(
     val id: String,
     val name: String,
-    val hp: String?,
-    val image: String?,
+    val hp: String? = null,
+    val image: String? = null,
 )

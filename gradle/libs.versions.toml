@@ -34,6 +34,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
+coil-test = { group = "io.coil-kt.coil3", name = "coil-test", version.ref = "coil" }
 compose-lint-checks = { group = "com.slack.lint.compose", name = "compose-lint-checks", version = "1.4.2" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
@@ -48,6 +49,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.7.3" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 [bundles]
@@ -61,3 +63,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

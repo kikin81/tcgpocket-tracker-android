@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.dependency.sorter) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.room) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }
 
 allprojects {
