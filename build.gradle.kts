@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.room) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.spotless) apply false
 }
 
 allprojects {
@@ -15,6 +16,24 @@ allprojects {
 
         tasks.withType<JavaCompile> {
             options.compilerArgs.addAll(arrayOf("-parameters", "-Xlint:deprecation"))
+        }
+    }
+}
+
+subprojects {
+    apply(plugin = "com.diffplug.spotless")
+    configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+        kotlin {
+            target("**/*.kt")
+            targetExclude("**/build/*.kt")
+
+            ktlint()
+            licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
+        }
+
+        kotlinGradle {
+            target("*.gradle.kts")
+            ktlint()
         }
     }
 }

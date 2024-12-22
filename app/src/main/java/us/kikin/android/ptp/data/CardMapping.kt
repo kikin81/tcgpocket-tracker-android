@@ -1,40 +1,58 @@
+/*
+ * Copyright 2024
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package us.kikin.android.ptp.data
 
 import us.kikin.android.ptp.data.source.local.CardEntity
 
-fun Card.toLocal() = CardEntity(
-    id = id,
-    name = name,
-    hp = hp,
-    image = image,
-    cardType = null,
-    evolutionType = null,
-    weakness = null,
-    retreat = null,
-    rarity = null,
-    fullart = null,
-    ex = null,
-    setDetails = null,
-    pack = null,
-    artist = null,
-    craftingCost = null
-)
+fun Card.toLocal() =
+    CardEntity(
+        id = id,
+        name = name,
+        hp = hp,
+        image = image,
+        cardType = null,
+        evolutionType = null,
+        weakness = null,
+        retreat = null,
+        rarity = null,
+        fullart = null,
+        ex = null,
+        setDetails = null,
+        pack = null,
+        artist = null,
+        craftingCost = null,
+    )
 
-fun CardEntity.toDomain() = Card(
-    id = id,
-    name = name,
-    hp = hp,
-    image = image,
-    cardType = cardType,
-    evolutionType = evolutionType,
-    weakness = weakness,
-    retreat = retreat,
-    rarity = rarity,
-    pack = pack,
-    artist = artist,
-    craftingCost = craftingCost,
-    setDetails = setDetails
-)
+fun CardEntity.toDomain() =
+    Card(
+        id = id,
+        name = name,
+        hp = hp,
+        image = image,
+        cardType = cardType,
+        evolutionType = evolutionType,
+        weakness = weakness,
+        retreat = retreat,
+        rarity = rarity,
+        pack = pack,
+        artist = artist,
+        craftingCost = craftingCost,
+        setDetails = setDetails,
+    )
 
 fun List<Card>.toLocal() = map(Card::toLocal)
 

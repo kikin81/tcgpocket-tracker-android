@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package us.kikin.android.ptp.cards
 
 import androidx.annotation.StringRes
@@ -50,7 +66,7 @@ fun CardsScreen(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -59,7 +75,7 @@ fun CardsScreen(
             onCardClick = onCardClick,
             isLoading = uiState.isLoading,
             userMessage = userMessage,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
         )
 
         // Check for user messages to display on the screen
@@ -79,10 +95,10 @@ private fun CardsContent(
     isLoading: Boolean,
     onCardClick: (Card) -> Unit,
     userMessage: Int?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         if (isLoading) {
             CircularProgressIndicator()
@@ -121,30 +137,32 @@ private fun CardsList(
 private fun CardItem(
     card: Card,
     onCardClick: (Card) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     MaterialCard(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth(),
         onClick = { onCardClick(card) },
     ) {
         Column {
             card.image?.let { imageUrl ->
-                val previewHandler = AsyncImagePreviewHandler {
-                    FakeImage(color = Color.Black.hashCode())
-                }
+                val previewHandler =
+                    AsyncImagePreviewHandler {
+                        FakeImage(color = Color.Black.hashCode())
+                    }
                 CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
                     AsyncImage(
                         model = imageUrl,
                         contentDescription = card.name,
-                        modifier = Modifier.aspectRatio(3f / 4f)
+                        modifier = Modifier.aspectRatio(3f / 4f),
                     )
                 }
             }
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(
                     text = card.name,
-                    style = MaterialTheme.typography.titleSmall
+                    style = MaterialTheme.typography.titleSmall,
                 )
             }
         }
@@ -155,38 +173,39 @@ private fun CardItem(
 @Preview
 private fun CardsContentPreview() {
     CardsContent(
-        cards = persistentListOf(
-            Card(
-                id = "A1001",
-                name = "Bulbasaur",
-                image = "https://example.com/image1.jpg",
+        cards =
+            persistentListOf(
+                Card(
+                    id = "A1001",
+                    name = "Bulbasaur",
+                    image = "https://example.com/image1.jpg",
+                ),
+                Card(
+                    id = "A1002",
+                    name = "Ivysaur",
+                    image = "https://example.com/image1.jpg",
+                ),
+                Card(
+                    id = "A1003",
+                    name = "Venosaur",
+                    image = "https://example.com/image1.jpg",
+                ),
+                Card(
+                    id = "A1004",
+                    name = "Charmander",
+                    image = "https://example.com/image1.jpg",
+                ),
+                Card(
+                    id = "A1005",
+                    name = "Charmeleon",
+                    image = "https://example.com/image1.jpg",
+                ),
+                Card(
+                    id = "A1006",
+                    name = "Charizard",
+                    image = "https://example.com/image1.jpg",
+                ),
             ),
-            Card(
-                id = "A1002",
-                name = "Ivysaur",
-                image = "https://example.com/image1.jpg",
-            ),
-            Card(
-                id = "A1003",
-                name = "Venosaur",
-                image = "https://example.com/image1.jpg",
-            ),
-            Card(
-                id = "A1004",
-                name = "Charmander",
-                image = "https://example.com/image1.jpg",
-            ),
-            Card(
-                id = "A1005",
-                name = "Charmeleon",
-                image = "https://example.com/image1.jpg",
-            ),
-            Card(
-                id = "A1006",
-                name = "Charizard",
-                image = "https://example.com/image1.jpg",
-            ),
-        ),
         isLoading = false,
         userMessage = null,
         onCardClick = {},

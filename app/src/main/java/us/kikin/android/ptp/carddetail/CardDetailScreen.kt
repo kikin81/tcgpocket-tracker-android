@@ -1,3 +1,19 @@
+/*
+ * Copyright 2024
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package us.kikin.android.ptp.carddetail
 
 import androidx.annotation.StringRes
@@ -33,12 +49,12 @@ fun CardDetailScreen(
     modifier: Modifier = Modifier,
     @StringRes userMessage: Int? = null,
     viewModel: CardDetailViewModel = hiltViewModel(),
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     PtpTheme {
         Scaffold(
             modifier = modifier.fillMaxSize(),
-            snackbarHost = { SnackbarHost(snackbarHostState) }
+            snackbarHost = { SnackbarHost(snackbarHostState) },
         ) { paddingValues ->
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             Column(modifier = Modifier.padding(paddingValues)) {
@@ -46,7 +62,7 @@ fun CardDetailScreen(
                     card = uiState.card,
                     userMessage = userMessage,
                     isLoading = uiState.isLoading,
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
                 )
             }
 
@@ -70,7 +86,7 @@ fun CardDetailContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         if (isLoading) {
             CircularProgressIndicator()
@@ -88,47 +104,47 @@ fun CardDetailContent(
 @Composable
 fun CardDetail(
     card: Card,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(state = rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(state = rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-
         AsyncImage(
             model = card.image,
             contentDescription = card.name,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Text(
             text = card.name,
             modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
         )
 
         card.rarity?.let {
             Text(
                 text = "Rarity: $it",
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
         card.hp?.let {
             Text(
                 text = "HP: $it",
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
         card.artist?.let {
             Text(
                 text = "Illustrator: $it",
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
         Row {
@@ -136,13 +152,13 @@ fun CardDetail(
                 Text(
                     text = "Set: $it",
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
             card.pack?.let {
                 Text(
                     text = "Pack: $it",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
