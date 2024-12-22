@@ -27,10 +27,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Card as MaterialCard
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -64,8 +62,8 @@ import coil3.test.FakeImage
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import us.kikin.android.ptp.data.Card
 import us.kikin.android.ptp.R
+import us.kikin.android.ptp.data.Card
 import us.kikin.android.ptp.icons.PtpIcons
 import us.kikin.android.ptp.icons.rounded.FilterList
 import us.kikin.android.ptp.ui.theme.AppTheme
@@ -102,7 +100,7 @@ fun CardsScreen(
                                 contentDescription = stringResource(R.string.card_list_filters),
                             )
                         }
-                    }
+                    },
                 )
             },
             snackbarHost = { SnackbarHost(snackbarHostState) },
