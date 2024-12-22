@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: spotless
+        name: spotless
+        entry: ./gradlew app:spotlessCheck
+        language: system
+        types: [kotlin]
