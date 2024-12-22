@@ -25,12 +25,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -45,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import us.kikin.android.ptp.components.Stepper
 import us.kikin.android.ptp.data.Card
 import us.kikin.android.ptp.ui.theme.PtpTheme
 
@@ -68,7 +65,7 @@ fun CardDetailScreen(
                     userMessage = userMessage,
                     isLoading = uiState.isLoading,
                     modifier = Modifier.padding(paddingValues),
-                    onIncrementClick = { viewModel.incrementCardCount(it) },
+                    onCardCountChange = { viewModel.incrementCardCount(uiState.card?.id, it) },
                 )
             }
 
@@ -90,7 +87,7 @@ fun CardDetailContent(
     userCardCount: Int?,
     isLoading: Boolean,
     userMessage: Int?,
-    onIncrementClick: (String) -> Unit,
+    onCardCountChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -103,7 +100,7 @@ fun CardDetailContent(
                 CardDetail(
                     card = card,
                     userCardCount = userCardCount,
-                    onIncrementClick = { onIncrementClick(card.id) },
+                    onCardCountChange = onCardCountChange,
                 )
             } else {
                 // Handle error state
@@ -117,7 +114,7 @@ fun CardDetailContent(
 fun CardDetail(
     card: Card,
     userCardCount: Int?,
-    onIncrementClick: (String) -> Unit,
+    onCardCountChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -183,11 +180,10 @@ fun CardDetail(
                 style = MaterialTheme.typography.bodyMedium,
             )
         }
-        OutlinedIconButton(onClick = { onIncrementClicked(card.id) }) {
-            Icon(
-                imageVector = Icons.Rounded.Add,
-                contentDescription = "Add card to collection",
-            )
-        }
+        Stepper(
+            value = userCardCount ?: 0,
+            onValueChange = onCardCountChange,
+            valueProgression = 0..10,
+        )
     }
 }

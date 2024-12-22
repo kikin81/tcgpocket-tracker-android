@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -35,6 +34,7 @@ import us.kikin.android.ptp.data.CardRepository
 import us.kikin.android.ptp.navigation.CardDetailDestination
 import us.kikin.android.ptp.util.Async
 import us.kikin.android.ptp.util.WhileUiSubscribed
+import javax.inject.Inject
 
 data class CardDetailsUiState(
     val card: Card? = null,
@@ -118,12 +118,13 @@ class CardDetailViewModel @Inject constructor(
         _userMessage.value = null
     }
 
-    fun incrementCardCount(cardId: String?) {
-        cardId ?: return
+    fun incrementCardCount(cardId: String?, cardCount: Int) {
+        if (cardId == null) {
+            return
+        }
         viewModelScope.launch {
-            val currentCopies = cardRepository.getCardCopies(cardId)
-            cardRepository.addCardToCollection(cardId, currentCopies + 1)
-            _cardCopies.value = currentCopies + 1
+            cardRepository.addCardToCollection(cardId, cardCount)
+            _cardCopies.value = cardCount
         }
     }
 }
