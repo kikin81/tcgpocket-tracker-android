@@ -26,8 +26,13 @@ subprojects {
         kotlin {
             target("**/*.kt")
             targetExclude("**/build/*.kt")
-
             ktlint()
+                .setEditorConfigPath(rootProject.file(".editorconfig"))
+                .customRuleSets(
+                    listOf(
+                        "io.nlopez.compose.rules:ktlint:0.4.16",
+                    ),
+                )
             licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
         }
 

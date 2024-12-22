@@ -108,10 +108,10 @@ fun CardDetail(
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(state = rememberScrollState()),
+        modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(state = rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         AsyncImage(

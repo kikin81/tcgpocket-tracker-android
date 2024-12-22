@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -33,7 +34,6 @@ import us.kikin.android.ptp.data.CardRepository
 import us.kikin.android.ptp.navigation.CardDetailDestination
 import us.kikin.android.ptp.util.Async
 import us.kikin.android.ptp.util.WhileUiSubscribed
-import javax.inject.Inject
 
 data class CardDetailsUiState(
     val card: Card? = null,
@@ -42,56 +42,55 @@ data class CardDetailsUiState(
 )
 
 @HiltViewModel
-class CardDetailViewModel
-    @Inject
-    constructor(
-        private val cardRepository: CardRepository,
-        private val savedStateHandle: SavedStateHandle,
-    ) : ViewModel() {
-        private var _cardState =
-            MutableStateFlow(savedStateHandle.toRoute<CardDetailDestination>().cardId)
-        private val _isLoading = MutableStateFlow(false)
-        private val _userMessage: MutableStateFlow<Int?> = MutableStateFlow(null)
-        private val _cardDetailAsync =
-            cardRepository.getCardByIdStream(_cardState.value)
-                .map { handleCard(it) }
-                .catch { emit(Async.Error(R.string.loading_card_detail_error)) }
-        val uiState: StateFlow<CardDetailsUiState> =
-            combine(
-                _isLoading,
-                _userMessage,
-                _cardDetailAsync,
-            ) { isLoading, userMessage, cardDetailAsync ->
-                when (cardDetailAsync) {
-                    Async.Loading -> {
-                        CardDetailsUiState(isLoading = true)
-                    }
+class CardDetailViewModel @Inject constructor(
+    private val cardRepository: CardRepository,
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    private var _cardState =
+        MutableStateFlow(savedStateHandle.toRoute<CardDetailDestination>().cardId)
+    private val _cardCopies = MutableStateFlow(0)
+    private val _isLoading = MutableStateFlow(false)
+    private val _userMessage: MutableStateFlow<Int?> = MutableStateFlow(null)
+    private val _cardDetailAsync =
+        cardRepository.getCardByIdStream(_cardState.value)
+            .map { handleCard(it) }
+            .catch { emit(Async.Error(R.string.loading_card_detail_error)) }
+    val uiState: StateFlow<CardDetailsUiState> =
+        combine(
+            _isLoading,
+            _userMessage,
+            _cardDetailAsync,
+        ) { isLoading, userMessage, cardDetailAsync ->
+            when (cardDetailAsync) {
+                Async.Loading -> {
+                    CardDetailsUiState(isLoading = true)
+                }
 
-                    is Async.Error -> {
-                        CardDetailsUiState(
-                            userMessage = cardDetailAsync.errorMessage,
-                        )
-                    }
+                is Async.Error -> {
+                    CardDetailsUiState(
+                        userMessage = cardDetailAsync.errorMessage,
+                    )
+                }
 
-                    is Async.Success -> {
-                        CardDetailsUiState(card = cardDetailAsync.data, isLoading = isLoading)
-                    }
+                is Async.Success -> {
+                    CardDetailsUiState(card = cardDetailAsync.data, isLoading = isLoading)
                 }
             }
-                .stateIn(
-                    scope = viewModelScope,
-                    started = WhileUiSubscribed,
-                    initialValue = CardDetailsUiState(isLoading = true),
-                )
-
-        private fun handleCard(card: Card?): Async<Card?> {
-            if (card == null) {
-                return Async.Error(R.string.card_detail_not_found)
-            }
-            return Async.Success(card)
         }
+            .stateIn(
+                scope = viewModelScope,
+                started = WhileUiSubscribed,
+                initialValue = CardDetailsUiState(isLoading = true),
+            )
 
-        fun snackbarMessageShown() {
-            _userMessage.value = null
+    private fun handleCard(card: Card?): Async<Card?> {
+        if (card == null) {
+            return Async.Error(R.string.card_detail_not_found)
         }
+        return Async.Success(card)
     }
+
+    fun snackbarMessageShown() {
+        _userMessage.value = null
+    }
+}

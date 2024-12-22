@@ -24,10 +24,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import us.kikin.android.ptp.data.CardRepository
 import us.kikin.android.ptp.data.DefaultCardRepository
 import us.kikin.android.ptp.data.source.local.AppDatabase
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)

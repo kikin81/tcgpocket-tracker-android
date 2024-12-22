@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card as MaterialCard
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,7 +55,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import us.kikin.android.ptp.data.Card
-import androidx.compose.material3.Card as MaterialCard
 
 @Composable
 fun CardsScreen(
@@ -141,8 +141,8 @@ private fun CardItem(
 ) {
     MaterialCard(
         modifier =
-            modifier
-                .fillMaxWidth(),
+        modifier
+            .fillMaxWidth(),
         onClick = { onCardClick(card) },
     ) {
         Column {
@@ -174,38 +174,38 @@ private fun CardItem(
 private fun CardsContentPreview() {
     CardsContent(
         cards =
-            persistentListOf(
-                Card(
-                    id = "A1001",
-                    name = "Bulbasaur",
-                    image = "https://example.com/image1.jpg",
-                ),
-                Card(
-                    id = "A1002",
-                    name = "Ivysaur",
-                    image = "https://example.com/image1.jpg",
-                ),
-                Card(
-                    id = "A1003",
-                    name = "Venosaur",
-                    image = "https://example.com/image1.jpg",
-                ),
-                Card(
-                    id = "A1004",
-                    name = "Charmander",
-                    image = "https://example.com/image1.jpg",
-                ),
-                Card(
-                    id = "A1005",
-                    name = "Charmeleon",
-                    image = "https://example.com/image1.jpg",
-                ),
-                Card(
-                    id = "A1006",
-                    name = "Charizard",
-                    image = "https://example.com/image1.jpg",
-                ),
+        persistentListOf(
+            Card(
+                id = "A1001",
+                name = "Bulbasaur",
+                image = "https://example.com/image1.jpg",
             ),
+            Card(
+                id = "A1002",
+                name = "Ivysaur",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1003",
+                name = "Venosaur",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1004",
+                name = "Charmander",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1005",
+                name = "Charmeleon",
+                image = "https://example.com/image1.jpg",
+            ),
+            Card(
+                id = "A1006",
+                name = "Charizard",
+                image = "https://example.com/image1.jpg",
+            ),
+        ),
         isLoading = false,
         userMessage = null,
         onCardClick = {},

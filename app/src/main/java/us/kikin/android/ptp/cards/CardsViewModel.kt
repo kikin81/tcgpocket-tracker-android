@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -33,7 +34,6 @@ import us.kikin.android.ptp.data.CardRepository
 import us.kikin.android.ptp.navigation.CardListDestination
 import us.kikin.android.ptp.util.Async
 import us.kikin.android.ptp.util.WhileUiSubscribed
-import javax.inject.Inject
 
 data class CardsUiState(
     val cards: List<Card> = emptyList(),
@@ -43,59 +43,59 @@ data class CardsUiState(
 
 @HiltViewModel
 class CardsViewModel
-    @Inject
-    constructor(
-        private val cardRepository: CardRepository,
-        private val savedStateHandle: SavedStateHandle,
-    ) : ViewModel() {
-        private val _savedFilterType =
-            MutableStateFlow(savedStateHandle.toRoute<CardListDestination>().filterType)
-        private val _isLoading = MutableStateFlow(false)
-        private val _userMessage: MutableStateFlow<Int?> = MutableStateFlow(null)
-        private val _filteredCardsAsync =
-            combine(cardRepository.getCardsStream(), _savedFilterType) { cards, type ->
-                filterCards(cards, type)
-            }
-                .map { Async.Success(it) }
-                .catch<Async<List<Card>>> { emit(Async.Error(R.string.loading_cards_error)) }
+@Inject
+constructor(
+    private val cardRepository: CardRepository,
+    private val savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    private val _savedFilterType =
+        MutableStateFlow(savedStateHandle.toRoute<CardListDestination>().filterType)
+    private val _isLoading = MutableStateFlow(false)
+    private val _userMessage: MutableStateFlow<Int?> = MutableStateFlow(null)
+    private val _filteredCardsAsync =
+        combine(cardRepository.getCardsStream(), _savedFilterType) { cards, type ->
+            filterCards(cards, type)
+        }
+            .map { Async.Success(it) }
+            .catch<Async<List<Card>>> { emit(Async.Error(R.string.loading_cards_error)) }
 
-        val uiState: StateFlow<CardsUiState> =
-            combine(
-                _isLoading,
-                _userMessage,
-                _filteredCardsAsync,
-            ) { isLoading, userMessage, cardsAsync ->
-                when (cardsAsync) {
-                    Async.Loading -> {
-                        CardsUiState(isLoading = true)
-                    }
+    val uiState: StateFlow<CardsUiState> =
+        combine(
+            _isLoading,
+            _userMessage,
+            _filteredCardsAsync,
+        ) { isLoading, userMessage, cardsAsync ->
+            when (cardsAsync) {
+                Async.Loading -> {
+                    CardsUiState(isLoading = true)
+                }
 
-                    is Async.Error -> {
-                        CardsUiState(userMessage = cardsAsync.errorMessage)
-                    }
+                is Async.Error -> {
+                    CardsUiState(userMessage = cardsAsync.errorMessage)
+                }
 
-                    is Async.Success -> {
-                        CardsUiState(
-                            cards = cardsAsync.data,
-                            isLoading = isLoading,
-                            userMessage = userMessage,
-                        )
-                    }
+                is Async.Success -> {
+                    CardsUiState(
+                        cards = cardsAsync.data,
+                        isLoading = isLoading,
+                        userMessage = userMessage,
+                    )
                 }
             }
-                .stateIn(
-                    scope = viewModelScope,
-                    started = WhileUiSubscribed,
-                    initialValue = CardsUiState(isLoading = true),
-                )
-
-        private fun filterCards(cards: List<Card>, type: CardsFilterType): List<Card> {
-            return when (type) {
-                CardsFilterType.ALL_CARDS -> cards
-            }
         }
+            .stateIn(
+                scope = viewModelScope,
+                started = WhileUiSubscribed,
+                initialValue = CardsUiState(isLoading = true),
+            )
 
-        fun snackbarMessageShown() {
-            _userMessage.value = null
+    private fun filterCards(cards: List<Card>, type: CardsFilterType): List<Card> {
+        return when (type) {
+            CardsFilterType.ALL_CARDS -> cards
         }
     }
+
+    fun snackbarMessageShown() {
+        _userMessage.value = null
+    }
+}

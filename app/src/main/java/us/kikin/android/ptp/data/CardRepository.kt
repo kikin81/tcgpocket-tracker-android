@@ -24,4 +24,8 @@ interface CardRepository {
     fun getCards(): List<Card>
 
     fun getCardByIdStream(cardId: String): Flow<Card>
+
+    suspend fun getCardCopies(cardId: String): Int
+
+    suspend fun addCardToCollection(cardId: String, copies: Int)
 }
