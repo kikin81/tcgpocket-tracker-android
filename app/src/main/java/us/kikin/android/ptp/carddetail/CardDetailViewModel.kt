@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import us.kikin.android.ptp.R
 import us.kikin.android.ptp.data.Card
 import us.kikin.android.ptp.data.CardRepository
@@ -39,6 +40,7 @@ data class CardDetailsUiState(
     val card: Card? = null,
     val isLoading: Boolean = false,
     val userMessage: Int? = null,
+    val cardCount: Int? = null,
 )
 
 @HiltViewModel
@@ -49,31 +51,46 @@ class CardDetailViewModel @Inject constructor(
     private var _cardState =
         MutableStateFlow(savedStateHandle.toRoute<CardDetailDestination>().cardId)
     private val _cardCopies = MutableStateFlow(0)
+    val cardCopies: StateFlow<Int> = _cardCopies
     private val _isLoading = MutableStateFlow(false)
     private val _userMessage: MutableStateFlow<Int?> = MutableStateFlow(null)
     private val _cardDetailAsync =
         cardRepository.getCardByIdStream(_cardState.value)
             .map { handleCard(it) }
             .catch { emit(Async.Error(R.string.loading_card_detail_error)) }
+    private val _cardCopiesAsync =
+        cardRepository.getCardCopiesStream(_cardState.value)
+            .map { handleCardCount(it) }
+            .catch { emit(Async.Error(R.string.loading_card_detail_error)) }
     val uiState: StateFlow<CardDetailsUiState> =
         combine(
             _isLoading,
             _userMessage,
             _cardDetailAsync,
-        ) { isLoading, userMessage, cardDetailAsync ->
-            when (cardDetailAsync) {
-                Async.Loading -> {
+            _cardCopiesAsync,
+        ) { isLoading, userMessage, cardDetailAsync, cardCountAsync ->
+            when {
+                cardDetailAsync is Async.Loading || cardCountAsync is Async.Loading -> {
                     CardDetailsUiState(isLoading = true)
                 }
 
-                is Async.Error -> {
+                cardDetailAsync is Async.Error -> {
+                    CardDetailsUiState(userMessage = cardDetailAsync.errorMessage)
+                }
+
+                cardCountAsync is Async.Error -> {
+                    CardDetailsUiState(userMessage = cardCountAsync.errorMessage)
+                }
+
+                cardDetailAsync is Async.Success && cardCountAsync is Async.Success -> {
                     CardDetailsUiState(
-                        userMessage = cardDetailAsync.errorMessage,
+                        card = cardDetailAsync.data,
+                        cardCount = cardCountAsync.data,
                     )
                 }
 
-                is Async.Success -> {
-                    CardDetailsUiState(card = cardDetailAsync.data, isLoading = isLoading)
+                else -> {
+                    CardDetailsUiState(userMessage = R.string.loading_card_detail_error)
                 }
             }
         }
@@ -90,7 +107,23 @@ class CardDetailViewModel @Inject constructor(
         return Async.Success(card)
     }
 
+    private fun handleCardCount(count: Int?): Async<Int> {
+        if (count == null) {
+            return Async.Error(R.string.card_detail_not_found)
+        }
+        return Async.Success(count)
+    }
+
     fun snackbarMessageShown() {
         _userMessage.value = null
+    }
+
+    fun incrementCardCount(cardId: String?) {
+        cardId ?: return
+        viewModelScope.launch {
+            val currentCopies = cardRepository.getCardCopies(cardId)
+            cardRepository.addCardToCollection(cardId, currentCopies + 1)
+            _cardCopies.value = currentCopies + 1
+        }
     }
 }

@@ -51,6 +51,10 @@ constructor(
         return localDataSource.observeById(cardId).map { it.toDomain() }
     }
 
+    override fun getCardCopiesStream(cardId: String): Flow<Int> {
+        return userCollectionDao.observeCardCopies(cardId)
+    }
+
     override suspend fun getCardCopies(cardId: String): Int {
         return userCollectionDao.getCardCopies(cardId) ?: 0
     }

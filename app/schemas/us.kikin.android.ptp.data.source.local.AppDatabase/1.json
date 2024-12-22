@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e8efa1fc1accbaa057f9f54fbda1f677",
+    "identityHash": "3b1dc9c9ee81f2032afbdabe3360dbc0",
     "entities": [
       {
         "tableName": "Cards",
@@ -107,12 +107,50 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "UserCollection",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`card_id` TEXT NOT NULL, `copies` INTEGER NOT NULL, PRIMARY KEY(`card_id`), FOREIGN KEY(`card_id`) REFERENCES `Cards`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "cardId",
+            "columnName": "card_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "copies",
+            "columnName": "copies",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "card_id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Cards",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "card_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e8efa1fc1accbaa057f9f54fbda1f677')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3b1dc9c9ee81f2032afbdabe3360dbc0')"
     ]
   }
 }

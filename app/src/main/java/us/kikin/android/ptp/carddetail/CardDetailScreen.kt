@@ -25,8 +25,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -60,9 +64,11 @@ fun CardDetailScreen(
             Column(modifier = Modifier.padding(paddingValues)) {
                 CardDetailContent(
                     card = uiState.card,
+                    userCardCount = uiState.cardCount,
                     userMessage = userMessage,
                     isLoading = uiState.isLoading,
                     modifier = Modifier.padding(paddingValues),
+                    onIncrementClick = { viewModel.incrementCardCount(it) },
                 )
             }
 
@@ -81,8 +87,10 @@ fun CardDetailScreen(
 @Composable
 fun CardDetailContent(
     card: Card?,
+    userCardCount: Int?,
     isLoading: Boolean,
     userMessage: Int?,
+    onIncrementClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -92,7 +100,11 @@ fun CardDetailContent(
             CircularProgressIndicator()
         } else {
             if (card != null) {
-                CardDetail(card)
+                CardDetail(
+                    card = card,
+                    userCardCount = userCardCount,
+                    onIncrementClick = { onIncrementClick(card.id) },
+                )
             } else {
                 // Handle error state
                 Text("Error loading card details")
@@ -104,6 +116,8 @@ fun CardDetailContent(
 @Composable
 fun CardDetail(
     card: Card,
+    userCardCount: Int?,
+    onIncrementClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -161,6 +175,19 @@ fun CardDetail(
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
+        }
+        userCardCount?.let {
+            Text(
+                text = "You have $it copies",
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+        OutlinedIconButton(onClick = { onIncrementClicked(card.id) }) {
+            Icon(
+                imageVector = Icons.Rounded.Add,
+                contentDescription = "Add card to collection",
+            )
         }
     }
 }

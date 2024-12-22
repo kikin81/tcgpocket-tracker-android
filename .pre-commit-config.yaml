@@ -1,8 +1,7 @@
 repos:
-  - repo: local
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
     hooks:
-      - id: spotless
-        name: spotless
-        entry: ./gradlew app:spotlessCheck
-        language: system
-        types: [kotlin]
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml

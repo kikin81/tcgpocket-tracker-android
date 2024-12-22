@@ -21,6 +21,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserCollectionDao {
@@ -30,6 +31,9 @@ interface UserCollectionDao {
 
     @Query("SELECT copies FROM UserCollection WHERE card_id = :cardId")
     suspend fun getCardCopies(cardId: String): Int?
+
+    @Query("SELECT copies FROM UserCollection WHERE card_id = :cardId")
+    fun observeCardCopies(cardId: String): Flow<Int>
 
     @Delete
     suspend fun delete(userCollectionEntity: UserCollectionEntity)

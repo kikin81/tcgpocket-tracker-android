@@ -27,5 +27,7 @@ interface CardRepository {
 
     suspend fun getCardCopies(cardId: String): Int
 
+    fun getCardCopiesStream(cardId: String): Flow<Int>
+
     suspend fun addCardToCollection(cardId: String, copies: Int)
 }

@@ -56,4 +56,7 @@ object DatabaseModule {
 
     @Provides
     fun provideCardDao(database: AppDatabase) = database.cardDao()
+
+    @Provides
+    fun provideUserCollectionDao(database: AppDatabase) = database.userCollectionDao()
 }

@@ -4,4 +4,5 @@
     <string name="loading_cards_error">Error while loading cards</string>
     <string name="loading_card_detail_error">Error while loading card detail</string>
     <string name="card_detail_not_found">Card not found</string>
+<!--    <string name="loading_card_detail_error">Error while loading card detail</string>-->
 </resources>
