@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -34,7 +35,6 @@ import us.kikin.android.ptp.data.CardRepository
 import us.kikin.android.ptp.navigation.CardDetailDestination
 import us.kikin.android.ptp.util.Async
 import us.kikin.android.ptp.util.WhileUiSubscribed
-import javax.inject.Inject
 
 data class CardDetailsUiState(
     val card: Card? = null,
