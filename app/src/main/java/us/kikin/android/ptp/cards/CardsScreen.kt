@@ -27,13 +27,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Card as MaterialCard
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -41,7 +49,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -55,7 +65,12 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import us.kikin.android.ptp.data.Card
+import us.kikin.android.ptp.R
+import us.kikin.android.ptp.icons.PtpIcons
+import us.kikin.android.ptp.icons.rounded.FilterList
+import us.kikin.android.ptp.ui.theme.AppTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CardsScreen(
     onCardClick: (Card) -> Unit,
@@ -64,26 +79,51 @@ fun CardsScreen(
     viewModel: CardsViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-    ) { paddingValues ->
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val scaffoldBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    AppTheme {
+        Scaffold(
+            modifier = modifier
+                .fillMaxSize()
+                .nestedScroll(scaffoldBehavior.nestedScrollConnection),
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(id = R.string.app_name),
+                            style = MaterialTheme.typography.titleLarge,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
+                    actions = {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                imageVector = PtpIcons.Rounded.FilterList,
+                                contentDescription = stringResource(R.string.card_list_filters),
+                            )
+                        }
+                    }
+                )
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+        ) { paddingValues ->
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        CardsContent(
-            cards = uiState.cards.toPersistentList(),
-            onCardClick = onCardClick,
-            isLoading = uiState.isLoading,
-            userMessage = userMessage,
-            modifier = Modifier.padding(paddingValues),
-        )
+            CardsContent(
+                cards = uiState.cards.toPersistentList(),
+                onCardClick = onCardClick,
+                isLoading = uiState.isLoading,
+                userMessage = userMessage,
+                modifier = Modifier.padding(paddingValues),
+            )
 
-        // Check for user messages to display on the screen
-        uiState.userMessage?.let { message ->
-            val snackbarText = stringResource(message)
-            LaunchedEffect(snackbarHostState, viewModel, message, snackbarText) {
-                snackbarHostState.showSnackbar(snackbarText)
-                viewModel.snackbarMessageShown()
+            // Check for user messages to display on the screen
+            uiState.userMessage?.let { message ->
+                val snackbarText = stringResource(message)
+                LaunchedEffect(snackbarHostState, viewModel, message, snackbarText) {
+                    snackbarHostState.showSnackbar(snackbarText)
+                    viewModel.snackbarMessageShown()
+                }
             }
         }
     }
