@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import us.kikin.android.ptp.icons.PtpIcons
 import us.kikin.android.ptp.icons.rounded.Remove
-import us.kikin.android.ptp.ui.theme.PtpTheme
+import us.kikin.android.ptp.ui.theme.AppTheme
 
 @Composable
 fun Stepper(
@@ -89,7 +89,7 @@ fun Stepper(
 @Composable
 @Preview
 internal fun StepperPreview() {
-    PtpTheme {
+    AppTheme {
         var value by remember { mutableIntStateOf(0) }
         Stepper(
             value = value,

@@ -22,15 +22,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import us.kikin.android.ptp.navigation.SafePtpNavGraph
-import us.kikin.android.ptp.ui.theme.PtpTheme
+import us.kikin.android.ptp.ui.theme.AppTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
         setContent {
-            PtpTheme {
+            AppTheme {
                 SafePtpNavGraph()
             }
         }

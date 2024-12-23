@@ -43,7 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import us.kikin.android.ptp.components.Stepper
 import us.kikin.android.ptp.data.Card
-import us.kikin.android.ptp.ui.theme.PtpTheme
+import us.kikin.android.ptp.ui.theme.AppTheme
 
 @Composable
 fun CardDetailScreen(
@@ -52,7 +52,7 @@ fun CardDetailScreen(
     viewModel: CardDetailViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    PtpTheme {
+    AppTheme {
         Scaffold(
             modifier = modifier.fillMaxSize(),
             snackbarHost = { SnackbarHost(snackbarHostState) },
