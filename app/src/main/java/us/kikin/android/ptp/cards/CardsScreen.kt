@@ -27,24 +27,37 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.Card as MaterialCard
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -78,6 +91,9 @@ fun CardsScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     val scaffoldBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
     AppTheme {
         Scaffold(
             modifier = modifier
@@ -94,7 +110,7 @@ fun CardsScreen(
                         )
                     },
                     actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = { showBottomSheet = true }) {
                             Icon(
                                 imageVector = PtpIcons.Rounded.FilterList,
                                 contentDescription = stringResource(R.string.card_list_filters),
@@ -123,6 +139,20 @@ fun CardsScreen(
                     viewModel.snackbarMessageShown()
                 }
             }
+
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
+                    },
+                    sheetState = sheetState,
+                ) {
+                    FilterContent(
+                        currentFilter = uiState.filter,
+                        viewModel::setFiltering,
+                    )
+                }
+            }
         }
     }
 }
@@ -145,6 +175,59 @@ private fun CardsContent(
                 cards = cards,
                 onCardClick = onCardClick,
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterContent(
+    currentFilter: CardsFilterType,
+    onFilterChange: (CardsFilterType) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 24.dp),
+    ) {
+        // dropdown for set?
+        val options = CardsFilterType.entries
+        var expanded by remember { mutableStateOf(false) }
+        val textFieldState = rememberTextFieldState(currentFilter.name)
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { expanded = it },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            TextField(
+                modifier = Modifier
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                    .fillMaxWidth(),
+                state = textFieldState,
+                readOnly = true,
+                lineLimits = TextFieldLineLimits.SingleLine,
+                label = {
+                    Text("Set")
+                },
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
+                options.forEach { option ->
+                    val label = stringResource(option.titleResId)
+                    DropdownMenuItem(
+                        text = { Text(label, style = MaterialTheme.typography.bodyLarge) },
+                        onClick = {
+                            textFieldState.setTextAndPlaceCursorAtEnd(label)
+                            expanded = false
+                            onFilterChange(option)
+                        },
+                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                    )
+                }
+            }
         }
     }
 }

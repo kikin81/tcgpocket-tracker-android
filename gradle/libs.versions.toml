@@ -13,6 +13,7 @@ junitVersion = "1.2.1"
 kotlin = "2.1.0"
 ksp = "2.1.0-1.0.29"
 lifecycle = "2.8.7"
+material3 = "1.4.0-alpha05"
 paging = "3.3.5"
 room = "2.6.1"
 timber = "5.0.1"
@@ -26,7 +27,8 @@ androidx-compose-google-fonts = { group = "androidx.compose.ui", name = "ui-text
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
@@ -58,7 +60,7 @@ room = ["room-runtime", "room-ktx", "room-paging"]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-dependency-sorter = { id = "com.squareup.sort-dependencies", version = "0.13"}
+dependency-sorter = { id = "com.squareup.sort-dependencies", version = "0.13" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

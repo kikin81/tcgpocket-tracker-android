@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.google.fonts)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.material.icons)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
