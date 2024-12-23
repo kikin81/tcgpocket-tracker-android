@@ -5,4 +5,8 @@
     <string name="loading_card_detail_error">Error while loading card detail</string>
     <string name="card_detail_not_found">Card not found</string>
     <string name="card_list_filters">Filters</string>
+    <string name="card_list_filter_all">All</string>
+    <string name="card_list_filter_genetic_apex">Genetic Apex</string>
+    <string name="card_list_filter_promo_a">Promo-A</string>
+    <string name="card_list_filter_mythical_islands">Mythical Islands</string>
 </resources>

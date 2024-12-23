@@ -19,7 +19,6 @@ package us.kikin.android.ptp.cards
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,13 +30,13 @@ import kotlinx.coroutines.flow.stateIn
 import us.kikin.android.ptp.R
 import us.kikin.android.ptp.data.Card
 import us.kikin.android.ptp.data.CardRepository
-import us.kikin.android.ptp.navigation.CardListDestination
 import us.kikin.android.ptp.util.Async
 import us.kikin.android.ptp.util.WhileUiSubscribed
 
 data class CardsUiState(
     val cards: List<Card> = emptyList(),
     val isLoading: Boolean = false,
+    val filter: CardsFilterType = CardsFilterType.All,
     val userMessage: Int? = null,
 )
 
@@ -49,7 +48,8 @@ constructor(
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _savedFilterType =
-        MutableStateFlow(savedStateHandle.toRoute<CardListDestination>().filterType)
+        savedStateHandle.getStateFlow(CARDS_FILTER_SAVED_STATE_KEY, CardsFilterType.All)
+    private val _filterUiInfo = _savedFilterType
     private val _isLoading = MutableStateFlow(false)
     private val _userMessage: MutableStateFlow<Int?> = MutableStateFlow(null)
     private val _filteredCardsAsync =
@@ -61,10 +61,11 @@ constructor(
 
     val uiState: StateFlow<CardsUiState> =
         combine(
+            _filterUiInfo,
             _isLoading,
             _userMessage,
             _filteredCardsAsync,
-        ) { isLoading, userMessage, cardsAsync ->
+        ) { filterUiInfo, isLoading, userMessage, cardsAsync ->
             when (cardsAsync) {
                 Async.Loading -> {
                     CardsUiState(isLoading = true)
@@ -77,6 +78,7 @@ constructor(
                 is Async.Success -> {
                     CardsUiState(
                         cards = cardsAsync.data,
+                        filter = filterUiInfo,
                         isLoading = isLoading,
                         userMessage = userMessage,
                     )
@@ -91,11 +93,26 @@ constructor(
 
     private fun filterCards(cards: List<Card>, type: CardsFilterType): List<Card> {
         return when (type) {
-            CardsFilterType.ALL_CARDS -> cards
+            CardsFilterType.All -> cards
+            CardsFilterType.GeneticApex -> cards.filter {
+                it.setDetails == CardsFilterType.GeneticApex.setId
+            }
+            CardsFilterType.PromoA -> cards.filter {
+                it.setDetails == CardsFilterType.PromoA.setId
+            }
+            CardsFilterType.MythicalIslands -> cards.filter {
+                it.setDetails == CardsFilterType.MythicalIslands.setId
+            }
         }
     }
 
     fun snackbarMessageShown() {
         _userMessage.value = null
     }
+
+    fun setFiltering(requestType: CardsFilterType) {
+        savedStateHandle[CARDS_FILTER_SAVED_STATE_KEY] = requestType
+    }
 }
+
+const val CARDS_FILTER_SAVED_STATE_KEY = "CARDS_FILTER_SAVED_STATE_KEY"

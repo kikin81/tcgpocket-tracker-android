@@ -21,7 +21,7 @@ import us.kikin.android.ptp.cards.CardsFilterType
 
 @Serializable
 data class CardListDestination(
-    val filterType: CardsFilterType = CardsFilterType.ALL_CARDS,
+    val filterType: CardsFilterType = CardsFilterType.All,
     val userMessage: Int? = null,
 )
 
